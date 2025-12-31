@@ -187,13 +187,30 @@ const is31_led PROGMEM g_is31_leds[RGB_MATRIX_LED_COUNT] = {
     {1, A_1,    B_1,    C_1},         
 };
 
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-  case AP_GLOB:
-    host_consumer_send(record->event.pressed ? AC_NEXT_KEYBOARD_LAYOUT_SELECT : 0);
-    return false;
-  }
+    // 定义一个静态变量来记录按下的时间
+    static uint16_t apfn_timer;
 
-  return true;
+    switch (keycode) {
+        case KC_APFN:
+            if (record->event.pressed) {
+                // --- 按下时 ---
+                apfn_timer = timer_read(); // 1. 记录按下的那一刻时间
+                layer_on(1);               // 2. 开启 Layer 1 (实现组合键功能，如 Fn+F1)
+            } else {
+                // --- 松开时 ---
+                layer_off(1);              // 1. 关闭 Layer 1
+                
+                // 2. 判断按键时长：如果小于 TAPPING_TERM (通常是200ms)，视为"短按"
+                if (timer_elapsed(apfn_timer) < TAPPING_TERM) {
+                    // 发送 Globe 信号 (按下并立即松开)
+                    host_consumer_send(AC_NEXT_KEYBOARD_LAYOUT_SELECT);
+                    host_consumer_send(0); 
+                }
+            }
+            return false; // 告诉 QMK 不要再做其他默认处理
+
+        default:
+            return true; // 其他按键正常处理
+    }
 }

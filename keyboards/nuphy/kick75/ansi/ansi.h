@@ -48,7 +48,7 @@ enum custom_keycodes {
     SIDE_HUI,
     SIDE_SPI,
     SIDE_SPD,
-    AP_GLOB,
+    KC_APFN,
 };
 
 
