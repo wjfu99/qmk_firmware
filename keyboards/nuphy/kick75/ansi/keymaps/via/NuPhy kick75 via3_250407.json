@@ -200,6 +200,10 @@
 	{
 		"name": "Side\nSlow",
 		"title": "Side Speed -"
-	}
+	},
+	{
+		"name": "Apple\nGlobe",
+		"title": "Apple Globe Key"
+    }
 ]
 }

@@ -186,3 +186,14 @@ const is31_led PROGMEM g_is31_leds[RGB_MATRIX_LED_COUNT] = {
     {1, A_2,    B_2,    C_2},       
     {1, A_1,    B_1,    C_1},         
 };
+
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+  case AP_GLOB:
+    host_consumer_send(record->event.pressed ? AC_NEXT_KEYBOARD_LAYOUT_SELECT : 0);
+    return false;
+  }
+
+  return true;
+}
